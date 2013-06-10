@@ -3,10 +3,7 @@ from lxml import etree, html
 import requests
 import csv
 
-
-script, indexurl, saveas = argv
-target = open(saveas, 'wb')
-filewriter = csv.writer(target, dialect='excel')
+script, indexurl = argv
 
 
 def get_map(url):
@@ -31,7 +28,6 @@ def check_canonical(request):
 def check_map(url):
     sitemap_urls = get_map(url)
     item = 1
-    filewriter.writerow([url])
     for url in sitemap_urls:
         r = requests.get(url, allow_redirects=False)
         status_code = r.status_code
@@ -49,10 +45,11 @@ def check_map(url):
 
 index_urls = get_map(indexurl)
 
-filewriter.writerow([' ', 'URLs', 'Status Code',
-                    'Canonical', 'Canonical Tag URL'])
-
 for url in index_urls:
+    saveas_filename = url.split("/")[-1] + ".csv"
+    target = open(saveas_filename, 'wb')
+    filewriter = csv.writer(target, dialect='excel')
+    filewriter.writerow([' ', 'URLs', 'Status Code',
+                        'Canonical', 'Canonical Tag URL'])
     check_map(url)
-
-target.close()
+    target.close()

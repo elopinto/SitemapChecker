@@ -4,6 +4,7 @@ import requests
 import csv
 
 script, indexurl, map_number = argv
+map_number = int(map_number)
 
 
 def get_map(url):

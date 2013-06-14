@@ -3,8 +3,9 @@ from lxml import etree, html
 import requests
 import csv
 
-script, indexurl, map_number = argv
-map_number = int(map_number)
+script, indexurl, map_start, map_stop = argv
+map_start = int(map_start)
+map_stop = int(map_stop)
 
 
 def get_map(url):
@@ -46,7 +47,7 @@ def check_map(url):
 
 index_urls = get_map(indexurl)
 
-for url in index_urls[map_number:]:
+for url in index_urls[map_start:map_stop]:
     saveas_filename = url.split("/")[-1] + ".csv"
     target = open(saveas_filename, 'wb')
     filewriter = csv.writer(target, dialect='excel')

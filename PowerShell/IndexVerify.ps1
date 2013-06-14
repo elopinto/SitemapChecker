@@ -1,5 +1,5 @@
 ﻿param ($indexurl = $(throw "sitemap file path required"),
-	$target = $(throw "saveas file path required"))
+	[int]$start = $(throw "starting node required"))
 
 	
 [xml]$index = (Invoke-WebRequest $indexurl).content.trimstart("ï»¿")
@@ -39,6 +39,7 @@ $num = 1
 foreach ($node in $locnodes)
 {
 	[xml]$sitemap = (Invoke-WebRequest $node).content.trimstart("ï»¿")
-	checker $sitemap | Export-CSV $target -Append -NoTypeInformation
+	$mapname = $node.split('/')[-1] + ".csv"
+	checker $sitemap | Export-CSV $mapname -NoTypeInformation
 	$num += 1
 }

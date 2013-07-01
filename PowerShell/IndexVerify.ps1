@@ -1,5 +1,4 @@
-﻿param ($indexurl = $(throw "sitemap file path required"),
-	[int]$start = $(throw "starting node required"))
+﻿param ($indexurl = $(throw "sitemap file path required"))
 
 	
 [xml]$index = (Invoke-WebRequest $indexurl).content.trimstart("ï»¿")
@@ -35,11 +34,9 @@ function checker
 	}
 }
 
-$num = 1
 foreach ($node in $locnodes)
 {
 	[xml]$sitemap = (Invoke-WebRequest $node).content.trimstart("ï»¿")
 	$mapname = $node.split('/')[-1] + ".csv"
 	checker $sitemap | Export-CSV $mapname -NoTypeInformation
-	$num += 1
 }

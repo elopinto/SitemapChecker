@@ -7,10 +7,11 @@ import csv
 import os
 
 
-script, sitemapfile, saveas = argv
+script, sitemapurl, saveas = argv
 
-# open local xml file, create object with etree, and get namespace
-sitemap_page = open(sitemapfile).read()
+# open online xml sitemap file, create object with etree, and get namespace
+sitemap_page = requests.get(sitemapurl).text
+sitemap_page = sitemap_page.encode('ascii', 'ignore')
 sitemap = etree.fromstring(sitemap_page)
 map_nodes = "{%s}loc" % sitemap.nsmap[None]
 

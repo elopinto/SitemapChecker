@@ -11,7 +11,7 @@ script, sitemapurl, saveas = argv
 
 # open online xml sitemap file, create object with etree, and get namespace
 sitemap_page = requests.get(sitemapurl).text
-sitemap_page = sitemap_page.encode('ascii', 'ignore')
+sitemap_page = sitemap_page.encode('utf_8', 'ignore')
 sitemap = etree.fromstring(sitemap_page)
 map_nodes = "{%s}loc" % sitemap.nsmap[None]
 

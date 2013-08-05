@@ -24,6 +24,7 @@ if platform == 'win32':
 else:
     tempdir = '/tmp/'
 
+tempfiles = []
 
 # Check if page on sitemap has canonical tag and if the tag points to the 
 # page URL
@@ -42,6 +43,7 @@ def check_canonical(request):
 # 200 status code, check for canonical tags. Write results to temporary CSV.
 def check_map(start, stop, chunknum):
     saveas_filename = "%ssm_check_temp%d.csv" % (tempdir, chunknum)
+    tempfiles.append(saveas_filename)
     with open(saveas_filename, 'wb') as target:
         filewriter = csv.writer(target, dialect='excel')
         for url in sitemap_urls[start:stop]:
@@ -93,14 +95,6 @@ for thread in threads:
     
 for thread in threads:
     thread.join()
-
-tempfiles = [
-    "%ssm_check_temp1.csv" % tempdir, "%ssm_check_temp2.csv" % tempdir,
-    "%ssm_check_temp3.csv" % tempdir, "%ssm_check_temp4.csv" % tempdir,
-    "%ssm_check_temp5.csv" % tempdir, "%ssm_check_temp6.csv" % tempdir,
-    "%ssm_check_temp7.csv" % tempdir, "%ssm_check_temp8.csv" % tempdir,
-    "%ssm_check_temp9.csv" % tempdir, "%ssm_check_temp10.csv" % tempdir
-    ]
 
 # Combine results from each thread in final CSV document
 with open(saveas, 'wb') as final_target:

@@ -26,7 +26,7 @@ else:
 
 tempfiles = []
 
-# Check if page on sitemap has canonical tag and if the tag points to the 
+# Check if page on sitemap has canonical tag and if the tag points to the
 # page URL
 def check_canonical(request):
     source = request.text.encode('utf_8', 'ignore')

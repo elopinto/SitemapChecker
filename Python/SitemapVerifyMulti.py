@@ -58,7 +58,7 @@ def check_map(start, stop, chunknum):
                                 iscanonical, canonical_url])
             print url, status_code, iscanonical
 
-# Copy data from temporary CSV to final CSV. Return number of rows in final CSV.          
+# Copy data from temporary CSV to final CSV. Return number of rows in final CSV.
 def combine(final_writer, input_file, num):
     with open(input_file, 'rb') as source:
         item_source = csv.reader(source, dialect='excel')

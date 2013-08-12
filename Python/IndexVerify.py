@@ -2,20 +2,23 @@ from sys import argv
 from lxml import etree, html
 import requests
 import csv
+import os
 
-script, indexurl = argv
+script, indexurl, savefolder = argv
+
+os.mkdir(savefolder)
 
 
 def get_map(url):
     sitemap_page = requests.get(url).text
-    sitemap_page = sitemap_page.encode('ascii', 'ignore')
+    sitemap_page = sitemap_page.encode('utf_8', 'ignore')
     sitemap = etree.fromstring(sitemap_page)
     map_nodes = "{%s}loc" % sitemap.nsmap[None]
     sitemap_urls = [url.text.strip() for url in sitemap.iter(map_nodes)]
     return sitemap_urls
 
 def check_canonical(request):
-    source = request.text.encode('ascii', 'ignore')
+    source = request.text.encode('utf_8', 'ignore')
     head = html.fromstring(source).head
     href = ''
     for item in head.iter('link'):
@@ -47,9 +50,9 @@ index_urls = get_map(indexurl)
 
 for url in index_urls:
     saveas_filename = url.split("/")[-1] + ".csv"
-    target = open(saveas_filename, 'wb')
-    filewriter = csv.writer(target, dialect='excel')
-    filewriter.writerow([' ', 'URLs', 'Status Code',
-                        'Canonical', 'Canonical Tag URL'])
-    check_map(url)
-    target.close()
+    saveas_path = "%s\\%s" % (savefolder, saveas_filename)
+    with open(saveas_path, 'wb') as target:
+        filewriter = csv.writer(target, dialect='excel')
+        filewriter.writerow([' ', 'URLs', 'Status Code',
+                            'Canonical', 'Canonical Tag URL'])
+        check_map(url)

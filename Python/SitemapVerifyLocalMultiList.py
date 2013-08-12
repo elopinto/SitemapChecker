@@ -17,7 +17,7 @@ map_nodes = "{%s}loc" % sitemap.nsmap[None]
 # make list of webpage URLs from sitemap
 sitemap_urls = [url.text.strip() for url in sitemap.iter(map_nodes)]
 
-tempfiles = []
+tempfiles = {}
 
 # Check if page on sitemap has canonical tag and if the tag points to the
 # page URL
@@ -46,7 +46,7 @@ def check_map(start, stop, chunknum):
         iscanonical = canonical_url == url
         results.append([url, status_code, iscanonical, canonical_url])
         print url, status_code, iscanonical
-    tempfiles.append(results)
+    tempfiles['chunk%d' % chunknum] = results
 
 # Copy data from temporary CSV to final CSV. Return number of rows in final CSV.
 def combine(final_writer, input_list, num):
@@ -64,16 +64,16 @@ number_of_items = len(sitemap_urls)
 chunk = number_of_items / 10
 
 # Create 10 threads, each checking a different tenth or the sitemap
-ta = Thread(target=check_map, args=(0, chunk, 1))
-tb = Thread(target=check_map, args=(chunk, chunk*2, 2))
-tc = Thread(target=check_map, args=(chunk*2, chunk*3, 3))
-td = Thread(target=check_map, args=(chunk*3, chunk*4, 4))
-te = Thread(target=check_map, args=(chunk*4, chunk*5, 5))
-tf = Thread(target=check_map, args=(chunk*5, chunk*6, 6))
-tg = Thread(target=check_map, args=(chunk*6, chunk*7, 7))
-th = Thread(target=check_map, args=(chunk*7, chunk*8, 8))
-ti = Thread(target=check_map, args=(chunk*8, chunk*9, 9))
-tj = Thread(target=check_map, args=(chunk*9, chunk*10+1, 10))
+ta = Thread(target=check_map, args=(0, chunk, 0))
+tb = Thread(target=check_map, args=(chunk, chunk*2, 1))
+tc = Thread(target=check_map, args=(chunk*2, chunk*3, 2))
+td = Thread(target=check_map, args=(chunk*3, chunk*4, 3))
+te = Thread(target=check_map, args=(chunk*4, chunk*5, 4))
+tf = Thread(target=check_map, args=(chunk*5, chunk*6, 5))
+tg = Thread(target=check_map, args=(chunk*6, chunk*7, 6))
+th = Thread(target=check_map, args=(chunk*7, chunk*8, 7))
+ti = Thread(target=check_map, args=(chunk*8, chunk*9, 8))
+tj = Thread(target=check_map, args=(chunk*9, chunk*10+1, 9))
 
 threads = [ta, tb, tc, td, te, tf, tg, th, ti, tj]
 
@@ -89,6 +89,7 @@ with open(saveas, 'wb') as final_target:
     final_writer = csv.writer(final_target, dialect='excel')
     final_writer.writerow([' ', 'URLs', 'Status Code',
                             'Canonical', 'Canonical Tag URL'])
+    sorted_temps = sorted(tempfiles.keys())
     num = 1
-    for tlist in tempfiles:
-        num = combine(final_writer, tlist, num)
+    for tlist in sorted_temps:
+        num = combine(final_writer, tempfiles[tlist], num)

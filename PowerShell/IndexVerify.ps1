@@ -16,7 +16,7 @@ function checker
 	{
 		try
 		{
-			$page = (Invoke-WebRequest $node -MaximumRedirection 0 -ErrorAction:SilentlyContinue)
+			$page = Invoke-WebRequest $node -MaximumRedirection 0 -ErrorAction:SilentlyContinue
 			$statuscode = $page.StatusCode
 			$canonical = ($page.parsedHTML.getElementsByTagName("link") | Where-Object -property rel -eq -value canonical).href
 			$iscanonical = $canonical -eq $node

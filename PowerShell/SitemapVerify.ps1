@@ -27,7 +27,7 @@ function checker
 			[PsCustomObject]@{"Num"=$num; "URL"=$node; "Status Code"=$result; "Canonical"=$iscanonical; "Canonical URL"="N/A"}
 		}
 		[int]$completion = $num/$locnodes.length*100
-		Write-Progress -activity "Getting status codes of sitemap URLs and entering them in CSV" -status "Progress:" -currentoperation $completion% -percentcomplete ($completion)
+		Write-Progress -activity "Getting status codes of sitemap URLs and entering them in CSV" -status "Progress:" -currentoperation $completion% -percentcomplete $completion
 		$num += 1
 	}
 }

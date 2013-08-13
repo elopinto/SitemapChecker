@@ -1,26 +1,24 @@
 from sys import argv
-from sys import platform
 from lxml import etree, html
 from threading import Thread
 import requests
 import csv
-import os
 
 
 script, sitemapfile, saveas = argv
 
-# open local xml sitemap file, create object with etree, and get namespace
+# open local xml sitemap file, create object with etree, and get namespaces
 sitemap_page = open(sitemapfile).read()
 sitemap = etree.fromstring(sitemap_page)
 map_nodes = "{%s}loc" % sitemap.nsmap[None]
 
-# make list of webpage URLs from sitemap
+# make list of URLs from sitemap
 sitemap_urls = [url.text.strip() for url in sitemap.iter(map_nodes)]
 
 tempfiles = {}
 
-# Check if page on sitemap has canonical tag and if the tag points to the
-# page URL
+# Function: Check if page on sitemap has canonical tag and if the tag points to
+# the page URL
 def check_canonical(request):
     source = request.text.encode('utf_8', 'ignore')
     head = html.fromstring(source).head
@@ -32,8 +30,9 @@ def check_canonical(request):
             pass
     return href
 
-# Make web request for each URL in specified range of sitemap. If URL returns a
-# 200 status code, check for canonical tags. Write results to temporary CSV.
+# Function: Make web request for each URL in specified range of sitemap. If URL
+# returns a 200 status code, check for canonical tags. Write results to
+# temporary CSV.
 def check_map(start, stop, chunknum):
     results = []
     for url in sitemap_urls[start:stop]:
@@ -48,7 +47,8 @@ def check_map(start, stop, chunknum):
         print url, status_code, iscanonical
     tempfiles['chunk%d' % chunknum] = results
 
-# Copy data from temporary CSV to final CSV. Return number of rows in final CSV.
+# Copy data from temporary dictionary to final CSV. Return number of rows in
+# final CSV.
 def combine(final_writer, input_list, num):
     item = num
     for row in input_list:
@@ -63,7 +63,7 @@ def combine(final_writer, input_list, num):
 number_of_items = len(sitemap_urls)
 chunk = number_of_items / 10
 
-# Create 10 threads, each checking a different tenth or the sitemap
+# Create 10 threads, each checking a different tenth of the sitemap
 ta = Thread(target=check_map, args=(0, chunk, 0))
 tb = Thread(target=check_map, args=(chunk, chunk*2, 1))
 tc = Thread(target=check_map, args=(chunk*2, chunk*3, 2))

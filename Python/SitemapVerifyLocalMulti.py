@@ -1,5 +1,4 @@
-from sys import argv
-from sys import platform
+from sys import argv, platform
 from lxml import etree, html
 from threading import Thread
 import requests

@@ -5,7 +5,6 @@
 [xml]$sitemap = (Invoke-WebRequest $sitemapurl).content
 $locnodes = $sitemap.urlset.url.loc.trimend()
 
-
 function checker
 {
 	$num = 1
@@ -16,8 +15,8 @@ function checker
 		{
 			$page = Invoke-WebRequest $node -MaximumRedirection 0 -ErrorAction:SilentlyContinue
 			$statuscode = $page.StatusCode
-			$links = $page.parsedHTML.getElementsByTagName("link")
-			$canonical = ($links | Where-Object -property rel -value canonical -EQ).href
+			$links = $page.parsedHTML.getElementsByTagName("link") | Where-Object -property rel -value canonical -EQ
+			$canonical = $links.href
 			$iscanonical = $canonical -eq $node
 			[PsCustomObject]@{"Num"=$num; "URL"=$node; "Status Code"=$statuscode; "Canonical"=$iscanonical; "Canonical URL"=$canonical}
 		}
@@ -32,6 +31,5 @@ function checker
 		$num += 1
 	}
 }
-
 
 checker | Export-CSV $target -NoTypeInformation

@@ -62,6 +62,7 @@ def combine(final_writer, input_list, num):
 # thread should check.
 number_of_items = len(sitemap_urls)
 chunk = number_of_items / 10
+remainder = number_of_items - chunk * 10
 
 # Create 10 threads, each checking a different tenth of the sitemap
 ta = Thread(target=check_map, args=(0, chunk, 0))
@@ -73,7 +74,7 @@ tf = Thread(target=check_map, args=(chunk*5, chunk*6, 5))
 tg = Thread(target=check_map, args=(chunk*6, chunk*7, 6))
 th = Thread(target=check_map, args=(chunk*7, chunk*8, 7))
 ti = Thread(target=check_map, args=(chunk*8, chunk*9, 8))
-tj = Thread(target=check_map, args=(chunk*9, chunk*10+1, 9))
+tj = Thread(target=check_map, args=(chunk*9, chunk*10+remainder, 9))
 
 threads = [ta, tb, tc, td, te, tf, tg, th, ti, tj]
 

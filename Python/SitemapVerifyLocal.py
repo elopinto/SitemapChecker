@@ -13,7 +13,7 @@ map_nodes = "{%s}loc" % sitemap.nsmap[None]
 
 
 def check_canonical(request):
-    source = request.text.encode('utf_8', 'ignore')
+    source = request.text.encode('ascii', 'ignore')
     head = html.fromstring(source).head
     href = ''
     for item in head.iter('link'):

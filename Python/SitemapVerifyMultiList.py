@@ -9,7 +9,7 @@ script, sitemapurl, saveas = argv
 
 # open online xml sitemap file, create object with etree, and get namespace
 sitemap_page = requests.get(sitemapurl).text
-sitemap_page = sitemap_page.encode('utf_8', 'ignore')
+sitemap_page = sitemap_page.encode('ascii', 'ignore')
 sitemap = etree.fromstring(sitemap_page)
 map_nodes = "{%s}loc" % sitemap.nsmap[None]
 
@@ -21,7 +21,7 @@ tempfiles = {}
 # Function: Check if page on sitemap has canonical tag and if the tag points to
 # the page URL
 def check_canonical(request):
-    source = request.text.encode('utf_8', 'ignore')
+    source = request.text.encode('ascii', 'ignore')
     head = html.fromstring(source).head
     href = ''
     for item in head.iter('link'):

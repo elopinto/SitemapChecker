@@ -32,8 +32,8 @@ def check_canonical(request):
     return href
 
 # Function: Make web request for each URL in specified range of sitemap. If URL
-# returns a 200 status code, check for canonical tags. Write results to
-# temporary CSV.
+# returns a 200 status code, check for canonical tags. Add results to
+# temporary dictionary.
 def check_map(start, stop, chunknum):
     results = []
     for url in sitemap_urls[start:stop]:

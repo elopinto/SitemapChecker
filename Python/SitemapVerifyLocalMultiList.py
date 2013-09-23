@@ -35,7 +35,6 @@ def check_canonical(request):
 # temporary dictionary.
 def check_map(start, stop, chunknum):
     results = []
-    num = 1
     for url in sitemap_urls[start:stop]:
         r = requests.get(url, allow_redirects=False)
         status_code = r.status_code
@@ -46,7 +45,6 @@ def check_map(start, stop, chunknum):
         iscanonical = canonical_url == url
         results.append([url, status_code, iscanonical, canonical_url])
         print num, url, status_code, iscanonical
-        num += 1
     tempfiles['chunk%d' % chunknum] = results
 
 # Copy data from temporary dictionary to final CSV. Return number of rows in

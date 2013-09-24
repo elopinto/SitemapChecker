@@ -44,13 +44,12 @@ def check_map(start, stop, chunknum):
             canonical_url = ''	
         iscanonical = canonical_url == url
         results.append([url, status_code, iscanonical, canonical_url])
-        print num, url, status_code, iscanonical
+        print url, status_code, iscanonical
     tempfiles['chunk%d' % chunknum] = results
 
 # Copy data from temporary dictionary to final CSV. Return number of rows in
 # final CSV.
 def combine(final_writer, input_list, num):
-    item = num
     for row in input_list:
         row.insert(0, num)
         final_writer.writerow(row)

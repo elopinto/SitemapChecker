@@ -49,7 +49,6 @@ class MapChecker(object):
         self.tempfiles['chunk%d' % chunknum] = results
 
     def combine(self, final_writer, input_list, num):
-        item = num
         for row in input_list:
             row.insert(0, num)
             final_writer.writerow(row)

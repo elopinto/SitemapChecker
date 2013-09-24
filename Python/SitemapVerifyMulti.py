@@ -61,7 +61,6 @@ def check_map(start, stop, chunknum):
 def combine(final_writer, input_file, num):
     with open(input_file, 'rb') as source:
         item_source = csv.reader(source, dialect='excel')
-        item = num
         for row in item_source:
             row.insert(0, num)
             final_writer.writerow(row)

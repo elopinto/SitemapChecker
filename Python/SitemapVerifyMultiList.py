@@ -51,7 +51,6 @@ def check_map(start, stop, chunknum):
 # Copy data from temporary dictionary to final CSV. Return number of rows in
 # final CSV.
 def combine(final_writer, input_list, num):
-    item = num
     for row in input_list:
         row.insert(0, num)
         final_writer.writerow(row)

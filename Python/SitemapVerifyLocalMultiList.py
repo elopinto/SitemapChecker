@@ -47,8 +47,8 @@ def check_map(start, stop, chunknum):
         print url, status_code, iscanonical
     tempfiles['chunk%d' % chunknum] = results
 
-# Copy data from temporary dictionary to final CSV. Return number of rows in
-# final CSV.
+# Function: Copy data from temporary dictionary to final CSV. Return number of
+# rows in final CSV.
 def combine(final_writer, input_list, num):
     for row in input_list:
         row.insert(0, num)

@@ -7,11 +7,13 @@ import csv
 script, sitemapfile, saveas = argv
 
 
+# Open locally saved XML sitemap, parse with lxml. Get default namespace.
 sitemap_page = open(sitemapfile).read()
 sitemap = etree.fromstring(sitemap_page)
 map_nodes = "{%s}loc" % sitemap.nsmap[None]
 
 
+# Function: Get page listed on sitemap. Return canonical tag.
 def check_canonical(request):
     source = request.text.encode('ascii', 'ignore')
     head = html.fromstring(source).head
@@ -24,8 +26,10 @@ def check_canonical(request):
     return href
 
 
+# Make list of URLs from sitemap.
 sitemap_urls = [url.text.strip() for url in sitemap.iter(map_nodes)]
 
+# Check status codes and canonical tags of each URL, save results to CSV file.
 with open(saveas, 'wb') as target:
     filewriter = csv.writer(target, dialect='excel')
     filewriter.writerow([' ', 'URLs', 'Status Code',

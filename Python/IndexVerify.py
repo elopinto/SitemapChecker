@@ -6,9 +6,10 @@ import os
 
 script, indexurl, savefolder = argv
 
+# create folder to save files produced by running IndexVerify.py
 os.mkdir(savefolder)
 
-
+# Funtion: Get XML sitemap, parse with lxml, return list of URLs
 def get_map(url):
     sitemap_page = requests.get(url).text
     sitemap_page = sitemap_page.encode('ascii', 'ignore')
@@ -17,6 +18,7 @@ def get_map(url):
     sitemap_urls = [url.text.strip() for url in sitemap.iter(map_nodes)]
     return sitemap_urls
 
+# Function: Get webpage, parse HTML with lxml. Return canonical tag.
 def check_canonical(request):
     source = request.text.encode('ascii', 'ignore')
     head = html.fromstring(source).head
@@ -27,7 +29,9 @@ def check_canonical(request):
         else:
             pass
     return href
-	
+
+# Function: Check status code and canonical tags of URLs in sitemap.
+# Write results to CSV file.
 def check_map(url):
     sitemap_urls = get_map(url)
     item = 1
@@ -46,8 +50,11 @@ def check_map(url):
         item += 1
 
 
+# Get list of sitemaps in index.
 index_urls = get_map(indexurl)
 
+# Check status codes and canonical tags of URLs on each sitemap. Save
+# results in CSV files in directory created at start of script.
 for url in index_urls:
     saveas_filename = url.split("/")[-1] + ".csv"
     saveas_path = "%s\\%s" % (savefolder, saveas_filename)

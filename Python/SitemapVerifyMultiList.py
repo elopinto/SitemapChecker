@@ -22,13 +22,14 @@ tempfiles = {}
 # the page URL
 def check_canonical(request):
     source = request.text.encode('ascii', 'ignore')
-    head = html.fromstring(source).head
-    href = ''
-    for item in head.iter('link'):
-        if item.attrib['rel'] == 'canonical':
-            href = item.attrib['href']
-        else:
-            pass
+    try:
+        head = html.fromstring(source).head
+        href = ''
+        for item in head.iter('link'):
+            if item.attrib['rel'] == 'canonical':
+                href = item.attrib['href']
+    except:
+        href = 'Error parsing HTML'
     return href
 
 # Function: Make web request for each URL in specified range of sitemap. If URL

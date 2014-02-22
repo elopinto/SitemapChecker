@@ -21,13 +21,14 @@ def get_map(url):
 # Function: Get webpage, parse HTML with lxml. Return canonical tag.
 def check_canonical(request):
     source = request.text.encode('ascii', 'ignore')
-    head = html.fromstring(source).head
-    href = ''
-    for item in head.iter('link'):
-        if item.attrib['rel'] == 'canonical':
-            href = item.attrib['href']
-        else:
-            pass
+    try:
+        head = html.fromstring(source).head
+        href = ''
+        for item in head.iter('link'):
+            if item.attrib['rel'] == 'canonical':
+                href = item.attrib['href']
+    except:
+        href = 'Error parsing HTML'
     return href
 
 # Function: Check status code and canonical tags of URLs in sitemap.

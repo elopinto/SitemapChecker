@@ -1,8 +1,10 @@
 from sys import argv
 from lxml import etree, html
+from StringIO import StringIO
 import requests
 import csv
 import os
+import gzip
 
 script, indexurl, savefolder = argv
 
@@ -11,11 +13,20 @@ os.mkdir(savefolder)
 
 # Funtion: Get XML sitemap, parse with lxml, return list of URLs
 def get_map(url):
-    sitemap_page = requests.get(url).text
-    sitemap_page = sitemap_page.encode('ascii', 'ignore')
+    if url.endswith("gz"):
+        compressed_sitemap = requests.get(url).content
+        compressed_smstream = StringIO(compressed_sitemap)
+        sitemap_page = gzip.GzipFile(fileobj=compressed_smstream)
+        sitemap_page = sitemap_page.read()
+        compressed_smstream.close()
+    else:
+        sitemap_page = requests.get(url).text
+        sitemap_page = sitemap_page.encode('ascii', 'ignore')
+
     sitemap = etree.fromstring(sitemap_page)
     map_nodes = "{%s}loc" % sitemap.nsmap[None]
     sitemap_urls = [url.text.strip() for url in sitemap.iter(map_nodes)]
+
     return sitemap_urls
 
 # Function: Get webpage, parse HTML with lxml. Return canonical tag.
